@@ -19,6 +19,7 @@
 9. [转养操作步骤（Step by Step）](#9-转养操作步骤step-by-step)
 10. [新虾入职 Checklist](#10-新虾入职-checklist)
 11. [已知坑 & 注意事项](#11-已知坑--注意事项)
+12. [HANDOVER.md 自动同步机制](#12-handovermd-自动同步机制)
 
 ---
 
