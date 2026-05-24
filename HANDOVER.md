@@ -632,5 +632,63 @@ ls /home/admin/openclaw/workspace/scripts/
 
 ---
 
+## 12. HANDOVER.md 自动同步机制
+
+### 机制说明
+
+HANDOVER.md 托管在 GitHub 仓库，支持自动检测变更并推送更新。
+
+| 项目 | 值 |
+|------|-----|
+| **仓库** | `github.com/Michael-Wang811008/Hello-World` |
+| **文件** | `HANDOVER.md`（根目录） |
+| **分支** | `main` |
+| **同步脚本** | `sync-handover-to-github.sh` |
+| **状态文件** | `.handover-sync-state.json` |
+
+### 触发条件（自动检测）
+
+以下任一文件/目录变更时，触发推送：
+
+**配置文件**：
+- `HANDOVER.md` / `AGENTS.md` / `SOUL.md` / `TOOLS.md`
+- `feishu_table_ids.json` / `jvsclaw-customization.json`
+- `config/mcporter.json`
+
+**技能目录**：
+- `~/.openclaw/skills/ai-director/`
+- `~/.openclaw/skills/sports-daily-digest/`
+- `~/.openclaw/skills/director-master/`
+- `~/.openclaw/skills/shanyin-screenwriting-master/`
+- `~/.openclaw/skills/michael-commentator/`
+- `~/.openclaw/skills/media-data-analyst/`
+
+### 触发方式
+
+1. **心跳检查**（每次 heartbeat）— 由 `HEARTBEAT.md` 配置
+2. **Cron 备份**（每 6 小时）— Job ID: `d5d9f04b-c5fb-4749-a927-fdf142ced39a`
+3. **手动触发**（执行关键操作后）：
+   ```bash
+   echo "变更描述" > /home/admin/openclaw/workspace/.handover-diff-log
+   bash /home/admin/openclaw/workspace/sync-handover-to-github.sh
+   ```
+
+### Commit Message 格式
+
+- 首次上传：`初始化：AI Director 虾塘交接手册 V1.0`
+- 后续更新：`更新：[变更内容简述] - [YYYY-MM-DD]`
+
+### 新虾须知
+
+当你执行了以下操作后，**必须**触发同步：
+- 升级了任何 Skill
+- 修改了飞书 table_id
+- 新增/修改了 Skill 配置
+- 手动修改了 HANDOVER.md
+
+---
+
 *文档生成时间：2026-05-24 10:46 CST*
+*首次上传 Commit：`d3a6858`*
+*GitHub 地址：https://github.com/Michael-Wang811008/Hello-World/blob/main/HANDOVER.md*
 *生成者：Michael · 幽默轻松版（即将退休的虾）*
