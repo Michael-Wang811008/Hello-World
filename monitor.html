@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JVS监控</title>
+<style>
+:root{--bg:#0a0b10;--card:#13151e;--card2:#1a1d2b;--bdr:#232639;--ac:#7c6cff;--ac2:#00e0b8;--t:#e8e8ed;--dim:#8b8fa3;--mu:#5c5f73;--g:#22c55e;--y:#eab308;--r:#ef4444;--bl:#3b82f6}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--t);line-height:1.55}
+.w{max-width:1440px;margin:0 auto;padding:24px 28px}
+header{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:1px solid var(--bdr);margin-bottom:28px}
+header h1{font-size:26px;font-weight:800;background:linear-gradient(135deg,#7c6cff,#00e0b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:10px}
+header h1 i{font-style:normal;font-size:32px;-webkit-text-fill-color:initial}
+.hr{display:flex;align-items:center;gap:14px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--g);animation:p 2s infinite;display:inline-block}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.45}}
+.bdg{font-size:12px;color:var(--dim);background:var(--card);padding:5px 13px;border-radius:16px;border:1px solid var(--bdr)}
+.g{display:grid;gap:14px;margin-bottom:28px}
+.g4{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.c{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:18px 20px;transition:.2s}
+.c:hover{border-color:#353850;background:var(--card2)}
+.ct{font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+.cv{font-size:22px;font-weight:800}
+.cs{font-size:11.5px;color:var(--mu);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pb{height:7px;background:var(--bdr);border-radius:4px;overflow:hidden;margin-top:8px}
+.pf{height:100%;border-radius:4px}
+.pl{background:var(--g)}.pm{background:var(--y)}.ph{background:var(--r)}
+.tg{display:inline-flex;align-items:center;padding:2px 9px;border-radius:14px;font-size:10.5px;font-weight:700;gap:3px}
+.tg-g{background:rgba(34,197,94,.13);color:var(--g)}.tg-y{background:rgba(234,179,8,.13);color:var(--y)}
+.tg-r{background:rgba(239,68,68,.13);color:var(--r)}.tg-b{background:rgba(59,130,246,.13);color:var(--bl)}
+.tg-a{background:rgba(124,108,255,.13);color:var(--ac)}.tg-a2{background:rgba(0,224,184,.13);color:var(--ac2)}
+.sec{margin-bottom:30px}
+.st{font-size:17px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.st i{font-style:normal;font-size:20px}
+.sk-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.sk-c{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:12px 15px;transition:.2s}
+.sk-c:hover{border-color:var(--ac);transform:translateY(-1px)}
+.sk-n{font-weight:700;font-size:13.5px;margin-bottom:4px;display:flex;align-items:center;gap:7px}
+.sk-d{font-size:11.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tl-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:9px}
+.tl-c{background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:11px 13px;transition:.2s}
+.tl-c:hover{border-color:var(--ac2)}
+.tl-n{font-weight:700;font-size:12.5px;color:var(--ac2);font-family:'SF Mono','Fira Code',monospace;margin-bottom:3px}
+.tl-d{font-size:10.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cr-c{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:14px 18px;margin-bottom:10px}
+.cr-n{font-weight:700;font-size:14px;margin-bottom:6px}
+.cr-d{font-size:11.5px;color:var(--dim);margin-bottom:3px}
+.sg{display:flex;gap:14px;flex-wrap:wrap}
+.si{display:flex;align-items:center;gap:10px;padding:10px 18px;background:var(--card);border:1px solid var(--bdr);border-radius:10px;min-width:130px}
+.sc{font-size:26px;font-weight:800}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:10px 14px;text-align:left;color:var(--dim);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bdr);background:var(--card2);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--bdr);max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:768px){.g4,.g3{grid-template-columns:1fr}.w{padding:14px}header{flex-direction:column;gap:10px;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script>
+const D={
+  version:"OpenClaw 2026.3.13 (946b615)",
+  model:"gateway/jarvis",
+  ctx:"1,000,000 tokens",
+  thinking:"off",
+  node:"v24.14.0",
+  host:"iZ2zefp0omkuhalyxr3xl8Z",
+  os:"Linux 5.15.0-144-generic (x86_64)",
+  gw:{pid:"2067",up:"23天 1小时 15分钟",start:"2026-05-09 10:41"},
+  sysUp:"23天 1小时 15分钟",
+  cpu:{m:"Intel(R) Xeon(R) Platinum",c:"4",ld:"0.91"},
+  mem:{u:3065520,t:7441064,p:41.2},
+  disk:{u:31892582400,t:105286258688,p:30.3},
+  sess:"29",hb:"24h (main)",ts:"off",
+  sec:{c:"0",w:"5",i:"2"},
+  upd:"npm 2026.5.28 可用",
+  ch:[{n:"JVSClaw 官方通道",e:"ON",s:"OK"},{n:"OpenIM",e:"ON",s:"OK"}],
+  cron:[
+    {n:"HANDOVER.md 自动同步（备份）",ex:"0 */6 * * *",tz:"Asia/Shanghai",st:"ok",dur:"5.4 秒",desc:"运行 sync-handover-to-github.sh，有变更推送 commit ID..."},
+    {n:"每日体育新闻生成 (带日期归档)",ex:"0 7 * * *",tz:"Asia/Shanghai",st:"ok",dur:"111.8 秒",desc:"生成 IRONMAN/UTMB/HYROX/TENNIS 四个项目的 RSS 新闻，翻译为中文..."}
+  ],
+  runs:[
+    {j:"每日体育新闻生成",t:"2026-06-01 07:00",d:"111.8 秒",s:"ok",tk:"25.8k",sm:"抓取62条→精选2条，HYROX 1条 + 网球 1条，Git推送成功"},
+    {j:"HANDOVER.md 自动同步",t:"2026-06-01 04:03",d:"5.4 秒",s:"ok",tk:"21.6k",sm:"无变更，HEARTBEAT_OK"},
+    {j:"每日体育新闻生成",t:"2026-05-31 07:00",d:"97.8 秒",s:"ok",tk:"23.6k",sm:"抓取62条→精选3条，IRONMAN 1 + HYROX 1 + 网球 1，Git推送成功"},
+    {j:"HANDOVER.md 自动同步",t:"2026-05-30 22:03",d:"6.0 秒",s:"ok",tk:"21.6k",sm:"无变更，HEARTBEAT_OK"},
+    {j:"每日体育新闻生成",t:"2026-05-30 07:00",d:"127.8 秒",s:"ok",tk:"25.9k",sm:"抓取62条→精选4条，四板块均有内容，Git推送成功"}
+  ],
+  tools:[
+    {n:"read",d:"读取文件内容（文本和图片）"},{n:"write",d:"创建或覆盖文件"},
+    {n:"edit",d:"精确编辑文件（查找替换）"},{n:"exec",d:"执行 Shell 命令"},
+    {n:"process",d:"管理后台进程（日志/输入/终止）"},{n:"browser",d:"浏览器自动化控制（快照/截图/操作）"},
+    {n:"web_fetch",d:"抓取网页内容转 Markdown"},{n:"canvas",d:"节点画布控制（展示/截图/评估）"},
+    {n:"cron",d:"定时任务与唤醒事件管理"},{n:"message",d:"跨频道消息发送与管理"},
+    {n:"tts",d:"文字转语音"},{n:"memory_search",d:"语义搜索长期记忆"},
+    {n:"memory_get",d:"读取记忆文件片段"},{n:"sessions_spawn",d:"生成隔离子会话/Agent"},
+    {n:"sessions_send",d:"向其他会话发送消息"},{n:"sessions_list",d:"列出所有会话"},
+    {n:"sessions_history",d:"获取会话历史"},{n:"sessions_yield",d:"结束当前轮次等待子Agent"},
+    {n:"subagents",d:"管理子Agent（列表/终止/引导）"},{n:"session_status",d:"查看会话状态卡片"},
+    {n:"agents_list",d:"列出可用Agent ID"}
+  ],
+  mcp:[{n:"A-shares MCP",d:"A股行情数据接口（金融数据）"},{n:"akshare",d:"A/H股/基金/宏观经济数据查询"}],
+  plugins:[
+    {n:"jvsclaw",t:"built-in",d:"JVSClaw 官方通道 (mode=full)"},
+    {n:"Alibaba cache",t:"built-in",d:"缓存与数据服务"},
+    {n:"wobs埋点",t:"built-in",d:"数据埋点追踪"},
+    {n:"skills tracking",t:"built-in",d:"技能使用追踪"},
+    {n:"streamfn_wrapper",t:"built-in",d:"流式函数包装器"},
+    {n:"memory-core",t:"built-in",d:"记忆核心插件"},
+    {n:"openim",t:"extension",d:"OpenIM 即时通讯扩展"}
+  ],
+  skills:[
+    {n:"agent-browser",d:"浏览器自动化CLI，网页交互/表单/截图/数据抓取",s:"local",v:"latest"},
+    {n:"agent-reach",d:"多平台内容获取（Twitter/Reddit/YouTube/B站/小红书等）",s:"local",v:"latest"},
+    {n:"ai-director",d:"读取分镜表 Excel 并写入飞书多维表格",s:"local",v:"latest"},
+    {n:"alipay-authenticate-wallet",d:"支付宝官方支付服务开通和授权",s:"bundled",v:"built-in"},
+    {n:"alipay-pay-for-402-service",d:"支付宝 A402 智能体微支付（HTTP 402 账单）",s:"bundled",v:"built-in"},
+    {n:"alipay-pay-for-service",d:"支付宝收银台链接/支付请求/结果查询",s:"bundled",v:"built-in"},
+    {n:"clawhub",d:"ClawHub CLI 搜索/安装/发布 Agent Skills",s:"bundled",v:"built-in"},
+    {n:"copywriting",d:"营销文案撰写/改写（首页/落地页/定价页等）",s:"local",v:"latest"},
+    {n:"director-master",d:"山音超级导演大师 — 导演定调/分镜拆解/九列分镜表",s:"local",v:"latest"},
+    {n:"docx",d:"Word 文档创建/读取/编辑（含目录/页眉/页脚等）",s:"local",v:"latest"},
+    {n:"feishu-common",d:"飞书通用能力（API 调用基础）",s:"local",v:"latest"},
+    {n:"feishu-doc",d:"飞书 Wiki/Docs/Sheets/Bitable 内容抓取",s:"local",v:"latest"},
+    {n:"finance-data",d:"A/H股行情/财务指标/市场新闻/宏观经济数据查询",s:"local",v:"latest"},
+    {n:"find-skills",d:"搜索发现和安装 Agent Skills",s:"local",v:"latest"},
+    {n:"last30days",d:"过去30天深度研究（Reddit/X/YouTube/HackerNews等）",s:"local",v:"latest"},
+    {n:"media-data-analyst",d:"自媒体多平台数据抓取/清洗/存储到飞书多维表格",s:"workspace",v:"latest"},
+    {n:"michael-commentator",d:"Michael 的评论员助手",s:"local",v:"latest"},
+    {n:"moltguard",d:"防提示注入/数据泄露/恶意命令安全防护",s:"local",v:"latest"},
+    {n:"myreels-api",d:"MyReels AI 图片/视频/语音/音乐生成 API",s:"global",v:"latest"},
+    {n:"ontology",d:"类型化知识图谱（Person/Project/Task 等实体管理）",s:"local",v:"latest"},
+    {n:"pdf",d:"PDF 创建/读取/合并/拆分/旋转/水印/加密/OCR",s:"local",v:"latest"},
+    {n:"pptx (QoderWork)",d:"QoderWork 风格 PPT 演示文稿生成（14种模板）",s:"local",v:"latest"},
+    {n:"remotion-best-practices",d:"Remotion React 视频创作最佳实践",s:"local",v:"latest"},
+    {n:"screenwriting-master",d:"山音超级编剧大师 — 全格式影视剧本创作",s:"local",v:"latest"},
+    {n:"self-improvement",d:"捕获错误/纠正/学习记录，持续自我改进",s:"workspace",v:"3.0.10"},
+    {n:"skill-creator",d:"创建或更新 Agent Skills（含脚本/资源/结构）",s:"bundled",v:"built-in"},
+    {n:"sports-daily-digest",d:"体育每日精选（IRONMAN/UTMB/HYROX/网球）",s:"local",v:"latest"},
+    {n:"systematic-debugging",d:"系统化调试（遇到任何 bug 前优先使用）",s:"local",v:"latest"},
+    {n:"tailwind-design-system",d:"Tailwind CSS 设计系统/组件库/响应式模式",s:"local",v:"latest"},
+    {n:"translator-multi",d:"多语言翻译",s:"local",v:"latest"},
+    {n:"travel-planner",d:"旅行行程规划助手",s:"local",v:"latest"},
+    {n:"using-superpowers",d:"技能发现与调用入口",s:"local",v:"latest"},
+    {n:"web-research",d:"多源网页搜索/综合分析/引用研究报告",s:"global",v:"latest"},
+    {n:"web-search-plus",d:"智能路由搜索（Serper/Tavily/Exa/Perplexity 等）",s:"local",v:"latest"},
+    {n:"xlsx",d:"电子表格创建/读取/编辑/公式/图表/格式化",s:"local",v:"latest"}
+  ]
+};
+
+function fB(b){if(!b)return'0 B';const k=1024,u=['B','KB','MB','GB','TB'];let i=Math.floor(Math.log(b)/Math.log(k));return(b/Math.pow(k,i)).toFixed(1)+' '+u[i]}
+function pC(p){return p<60?'pl':p<85?'pm':'ph'}
+function tr(s,n){return s&&s.length>n?s.substring(0,n-3)+'...':s||''}
+
+document.getElementById('app').innerHTML=`
+<header>
+  <h1><i>🦞</i> JVS监控</h1>
+  <div class="hr"><span class="dot"></span><span class="bdg">数据快照 · ${new Date().toLocaleString('zh-CN')} · 刷新浏览器重新打开无更新</span></div>
+</header>
+
+<div class="sec"><div class="st"><i>📊</i> 系统概览</div>
+<div class="g g4">
+  <div class="c"><div class="ct">🏷️ JVS 版本</div><div class="cv">${D.version}</div><div class="cs">🔔 ${D.upd}</div></div>
+  <div class="c"><div class="ct">🧠 当前模型</div><div class="cv" style="font-size:19px">${D.model}</div><div class="cs">上下文 ${D.ctx} · 思考 ${D.thinking}</div></div>
+  <div class="c"><div class="ct">⏱️ 运行时间</div><div class="cv" style="font-size:17px">${D.gw.up}</div><div class="cs">Gateway PID ${D.gw.pid} · 启动于 ${D.gw.start}</div></div>
+  <div class="c"><div class="ct">🖥️ 主机</div><div class="cv" style="font-size:16px">${D.host}</div><div class="cs">${D.os} · Node ${D.node}</div></div>
+</div></div>
+
+<div class="sec"><div class="st"><i>💻</i> 资源使用</div>
+<div class="g g3">
+  <div class="c"><div class="ct">🧮 CPU</div><div class="cv" style="font-size:15px">${tr(D.cpu.m,32)}</div><div class="cs">${D.cpu.c} 核 · 负载 ${D.cpu.ld}</div></div>
+  <div class="c"><div class="ct">💾 内存</div><div style="display:flex;justify-content:space-between;align-items:baseline"><div class="cv" style="font-size:22px">${D.mem.p}%</div><div class="cs" style="margin:0">${fB(D.mem.u*1024)} / ${fB(D.mem.t*1024)}</div></div><div class="pb"><div class="pf ${pC(D.mem.p)}" style="width:${D.mem.p}%"></div></div></div>
+  <div class="c"><div class="ct">📀 磁盘</div><div style="display:flex;justify-content:space-between;align-items:baseline"><div class="cv" style="font-size:22px">${D.disk.p}%</div><div class="cs" style="margin:0">${fB(D.disk.u)} / ${fB(D.disk.t)}</div></div><div class="pb"><div class="pf ${pC(D.disk.p)}" style="width:${D.disk.p}%"></div></div></div>
+</div></div>
+
+<div class="sec"><div class="st"><i>🛡️</i> 安全审计 + 频道</div>
+<div class="sg">
+  <div class="si"><div class="sc" style="color:var(--g)">${D.sec.c}</div><div><div style="font-weight:700">严重</div><div style="font-size:11px;color:var(--dim)">Critical</div></div></div>
+  <div class="si"><div class="sc" style="color:var(--y)">${D.sec.w}</div><div><div style="font-weight:700">警告</div><div style="font-size:11px;color:var(--dim)">Warnings</div></div></div>
+  <div class="si"><div class="sc" style="color:var(--bl)">${D.sec.i}</div><div><div style="font-weight:700">信息</div><div style="font-size:11px;color:var(--dim)">Info</div></div></div>
+  ${D.ch.map(c=>`<div class="si" style="flex:1;min-width:180px"><div style="font-weight:700;font-size:14px">${c.n}</div><div style="display:flex;gap:6px;margin-left:auto"><span class="tg ${c.e==='ON'?'tg-g':'tg-r'}">${c.e}</span><span class="tg ${c.s==='OK'?'tg-g':'tg-y'}">${c.s}</span></div></div>`).join('')}
+</div></div>
+
+<div class="sec"><div class="st"><i>⏰</i> 定时任务 (${D.cron.length})</div>
+${D.cron.map(j=>`<div class="cr-c"><div style="display:flex;justify-content:space-between;align-items:center"><div class="cr-n">${j.n}</div><span class="tg ${j.st==='ok'?'tg-g':'tg-r'}">● ${j.st==='ok'?'正常':'异常'}</span></div><div class="cr-d">📅 调度: <code style="color:var(--ac2)">${j.ex}</code> (${j.tz}) · 上次耗时: ${j.dur}</div><div class="cr-d">📋 ${tr(j.desc,90)}</div></div>`).join('')}
+</div>
+
+<div class="sec"><div class="st"><i>📋</i> 最近 5 条执行记录</div>
+<div class="c" style="padding:0;overflow-x:auto">
+<table>
+<thead><tr><th>任务</th><th>执行时间</th><th>耗时</th><th>状态</th><th>Tokens</th><th>摘要</th></tr></thead>
+<tbody>${D.runs.map(r=>`<tr><td style="font-weight:600">${r.j}</td><td style="color:var(--dim);font-size:12px">${r.t}</td><td style="font-size:12px">${r.d}</td><td><span class="tg ${r.s==='ok'?'tg-g':'tg-r'}">● ${r.s==='ok'?'成功':'失败'}</span></td><td style="font-size:12px;color:var(--ac2);font-family:'SF Mono',monospace">${r.tk}</td><td style="font-size:12px;color:var(--dim)">${tr(r.sm,55)}</td></tr>`).join('')}</tbody>
+</table></div></div>
+
+<div class="sec"><div class="st"><i>🔗</i> MCP 服务 (${D.mcp.length})</div>
+<div class="g g3">${D.mcp.map(m=>`<div class="c" style="display:flex;align-items:center;gap:12px"><span class="tg tg-a2">MCP</span><div><div style="font-weight:700;font-size:14px">${m.n}</div><div style="font-size:11.5px;color:var(--dim)">${tr(m.d,50)}</div></div></div>`).join('')}</div></div>
+
+<div class="sec"><div class="st"><i>🔌</i> 插件 / 扩展 (${D.plugins.length})</div>
+<div class="g g3">${D.plugins.map(p=>`<div class="c" style="display:flex;align-items:center;gap:10px;padding:12px 16px"><span class="tg ${p.t==='built-in'?'tg-a':'tg-a2'}">${p.t==='built-in'?'内置':'扩展'}</span><div><div style="font-weight:700;font-size:13px">${p.n}</div><div style="font-size:11px;color:var(--dim)">${tr(p.d,45)}</div></div></div>`).join('')}</div></div>
+
+<div class="sec"><div class="st"><i>🔧</i> 内置工具 (${D.tools.length})</div>
+<div class="tl-g">${D.tools.map(t=>`<div class="tl-c"><div class="tl-n">${t.n}</div><div class="tl-d">${tr(t.d,36)}</div></div>`).join('')}</div></div>
+
+<div class="sec"><div class="st"><i>🎯</i> 已安装技能 (${D.skills.length})</div>
+<div class="sk-g">${D.skills.map(s=>`<div class="sk-c"><div class="sk-n"><span class="tg ${s.s==='local'?'tg-a':s.s==='global'?'tg-a2':s.s==='bundled'?'tg-b':'tg-y'}">${s.s}</span>${s.n}</div><div class="sk-d">${tr(s.d,65)}</div><div style="font-size:10px;color:var(--mu);margin-top:3px">v${s.v}</div></div>`).join('')}</div></div>
+`;
+</script>
+</body>
+</html>
